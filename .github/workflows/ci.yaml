@@ -5,16 +5,27 @@ on:
     branches:
       - main
 
-jobs:
+  workflow_dispatch:
 
+jobs:
   build-and-deploy:
 
-     runs-on: [self-hosted, windows]
+    runs-on: [self-hosted, windows]
 
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v4
+
+      # -------------------------
+      # Check Environment
+      # -------------------------
+
+      - name: Check Environment
+        run: |
+          docker --version
+          kubectl version --client
+          minikube status
 
       # -------------------------
       # Docker Login
@@ -32,10 +43,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/devops-demo:${{ github.sha }} \
-            -t ${{ secrets.DOCKERHUB_USERNAME }}/devops-demo:latest \
-            .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devops-demo:${{ github.sha }} -t ${{ secrets.DOCKERHUB_USERNAME }}/devops-demo:latest .
 
       # -------------------------
       # Push Image to Docker Hub
@@ -52,17 +60,21 @@ jobs:
 
       - name: Deploy to Minikube
         run: |
-
           kubectl apply -f k8s/namespace.yaml
-
           kubectl apply -f k8s/pvc.yaml
-
           kubectl apply -f k8s/deployment.yaml
-
           kubectl apply -f k8s/service.yaml
 
-          kubectl -n devops-demo set image \
-            deployment/python-app \
-            python-app=${{ secrets.DOCKERHUB_USERNAME }}/devops-demo:${{ github.sha }}
+          kubectl -n devops-demo set image deployment/python-app python-app=${{ secrets.DOCKERHUB_USERNAME }}/devops-demo:${{ github.sha }}
 
           kubectl -n devops-demo rollout status deployment/python-app
+
+      # -------------------------
+      # Verify Deployment
+      # -------------------------
+
+      - name: Verify Deployment
+        run: |
+          kubectl -n devops-demo get pods
+          kubectl -n devops-demo get svc
+          kubectl -n devops-demo get deployment
