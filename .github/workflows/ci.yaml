@@ -9,7 +9,7 @@ jobs:
 
   build-and-deploy:
 
-    runs-on: [self-hosted, linux]
+     runs-on: [self-hosted, windows]
 
     steps:
 
