@@ -1,0 +1,36 @@
+name: Test Self Hosted Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Test Runner
+        shell: powershell
+        run: |
+          Write-Host "================================"
+          Write-Host "Self-hosted runner is working"
+          Write-Host "================================"
+
+          Write-Host "Computer:"
+          hostname
+
+          Write-Host "User:"
+          whoami
+
+          Write-Host "PowerShell:"
+          $PSVersionTable.PSVersion
+
+          Write-Host "Docker:"
+          docker --version
+
+          Write-Host "Kubectl:"
+          kubectl version --client
+
+          Write-Host "Minikube:"
+          minikube version
+
+          Write-Host "Runner test completed successfully."
