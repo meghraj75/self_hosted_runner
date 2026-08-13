@@ -9,7 +9,6 @@ jobs:
 
     steps:
       - name: Test Runner
-        shell: powershell
         run: |
           Write-Host "================================"
           Write-Host "Self-hosted runner is working"
