@@ -9,27 +9,25 @@ jobs:
 
     steps:
       - name: Test Runner
+        shell: cmd
         run: |
-          Write-Host "================================"
-          Write-Host "Self-hosted runner is working"
-          Write-Host "================================"
+          echo ================================
+          echo Self-hosted runner is working
+          echo ================================
 
-          Write-Host "Computer:"
+          echo Computer:
           hostname
 
-          Write-Host "User:"
+          echo User:
           whoami
 
-          Write-Host "PowerShell:"
-          $PSVersionTable.PSVersion
-
-          Write-Host "Docker:"
+          echo Docker:
           docker --version
 
-          Write-Host "Kubectl:"
+          echo Kubectl:
           kubectl version --client
 
-          Write-Host "Minikube:"
+          echo Minikube:
           minikube version
 
-          Write-Host "Runner test completed successfully."
+          echo Runner test completed successfully.
