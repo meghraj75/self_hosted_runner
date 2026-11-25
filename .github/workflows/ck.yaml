@@ -1,0 +1,33 @@
+name: Test Self Hosted Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Test Runner
+        shell: cmd
+        run: |
+          echo ================================
+          echo Self-hosted runner is working
+          echo ================================
+
+          echo Computer:
+          hostname
+
+          echo User:
+          whoami
+
+          echo Docker:
+          docker --version
+
+          echo Kubectl:
+          kubectl version --client
+
+          echo Minikube:
+          minikube version
+
+          echo Runner test completed successfully.
